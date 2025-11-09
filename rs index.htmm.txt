@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evans Number-Language Converter</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 50px;
+    background-color: #f5f5f5;
+  }
+  textarea {
+    width: 100%;
+    height: 100px;
+    font-size: 16px;
+    padding: 10px;
+  }
+  button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .output {
+    margin-top: 20px;
+    font-size: 18px;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
+    word-break: break-all;
+  }
+</style>
+</head>
+<body>
+
+<h2>Evans Number-Language Converter</h2>
+<textarea id="inputText" placeholder="Type your English sentence here..."></textarea>
+<br>
+<button onclick="convertEvans()">Convert</button>
+
+<div class="output" id="outputText"></div>
+
+<script>
+const letterMap = {
+    'A':3, 'B':5, 'C':8, 'D':2, 'E':11, 'F':6, 'G':14, 'H':27,
+    'I':31, 'J':22, 'K':17, 'L':19, 'M':21, 'N':18, 'O':29,
+    'P':7, 'Q':15, 'R':24, 'S':9, 'T':4, 'U':18, 'V':25,
+    'W':13, 'X':27, 'Y':16, 'Z':24
+};
+
+const punctSwap = {
+    '!': ',', 
+    ',': '!'
+};
+
+function convertEvans() {
+    let text = document.getElementById('inputText').value.toUpperCase();
+    let result = '';
+    let prevCharLetter = false;
+
+    for (let i = 0; i < text.length; i++) {
+        let char = text[i];
+        if (char >= 'A' && char <= 'Z') {
+            if (prevCharLetter) {
+                result += '*';
+            }
+            result += letterMap[char];
+            prevCharLetter = true;
+        } else {
+            prevCharLetter = false;
+            if (char === ' ') {
+                continue; // No extra 0 for spaces (compact)
+            } else if (char in punctSwap) {
+                result += punctSwap[char];
+            } else if (char === '.') {
+                result += '?';
+            } else if (char === '?') {
+                result += '?';
+            } else {
+                result += '0'; // unsupported symbols
+            }
+        }
+    }
+
+    document.getElementById('outputText').innerText = result;
+}
+</script>
+
+</body>
+</html>
